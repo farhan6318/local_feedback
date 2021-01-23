@@ -15,12 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_feedback', language 'en'
- *
- * @package   local_feedback
- * @copyright 2020, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Web service token viewer. Visit this page to see the token for these web services.
  */
 
-$string['pluginname'] = 'Feedback generator API';
-$string['wstokendetails'] = 'WS Token details';
+require_once(__DIR__.'/../../config.php');
+
+use local_feedback\service\auto_config;
+
+$ac = auto_config::instance()->configure();
+
+$context = context_system::instance();
+
+require_login();
+require_capability('moodle/site:configview', $context);
+
+$PAGE->set_context($context);
+
+$PAGE->set_url('/local/feedback/wstoken.php');
+
+$PAGE->set_title(get_string('wstokendetails', 'local_feedback'));
+$PAGE->set_heading(get_string('wstokendetails', 'local_feedback'));
+
+echo $OUTPUT->header();
+
+echo $OUTPUT->notification(auto_config::get_ws_token()->token);
+
+echo $OUTPUT->footer();

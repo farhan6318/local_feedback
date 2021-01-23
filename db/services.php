@@ -15,22 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Web service definitions.
+ *
  * @package   local_feedback
- * @copyright 2020, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
+ * @copyright Copyright (c) 2020 Titus Learning
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-if (!$plugin) {
-    $plugin = new stdClass();
-}
+$functions = [
+        'local_feedback_version_info' => [
+                'classname' => 'local_feedback\\webservice\\version_info',
+                'methodname' => 'service',
+                'description' => 'Return key version info for Feedback webservices',
+                'type' => 'read',
+                'capabilities' => 'moodle/site:configview',
+        ],
+];
 
-$plugin->version = 2020121700;
-$plugin->requires = 2014051200;
-$plugin->component = 'local_feedback';
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.0';
-$plugin->dependencies = [
-        'webservice_restful' => 2018102100,
+$services = [
+        'Feedback Generation API Services' => [
+                'functions' => array_keys($functions),
+                'enabled' => 0,
+                'restrictedusers' => 0,
+                'shortname' => 'local_feedback',
+                'downloadfiles' => 1,
+                'uploadfiles' => 1,
+        ],
 ];

@@ -15,12 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_feedback', language 'en'
+ * Base service.
  *
- * @package   local_feedback
- * @copyright 2020, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     local_feedback
+ * @copyright   2019 Titus Learning <guy.thomas@tituslearning.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Feedback generator API';
-$string['wstokendetails'] = 'WS Token details';
+namespace local_feedback\service;
+
+defined('MOODLE_INTERNAL') || die;
+
+abstract class base_service {
+
+    protected static function get_instance(): base_service {
+        static $instances = [];
+        $class = get_called_class();
+        if (!empty($instances[$class])) {
+            return $instances[$class];
+        }
+        $instance = new $class();
+        $instances[$class] = $instance;
+        return $instance;
+    }
+
+    abstract public static function instance();
+}
