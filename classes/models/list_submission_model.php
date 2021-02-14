@@ -14,23 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * @package   local_feedback
- * @copyright 2021, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_feedback\models;
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-if (!$plugin) {
-    $plugin = new stdClass();
+class list_submission_model extends base_model {
+
+    /**
+     * @var submission_model[]
+     * @wsdesc Submission model
+     * @wsrequired true
+     */
+    public $submissions;
+
+    public function __construct($submissions) {
+        $this->set_props_construct_args(func_get_args());
+    }
+    /**
+     * This is here for IDE completion.
+     * @param array|object $data
+     * @return array
+     * @throws \coding_exception
+     */
+    public static function from_data($data): list_submission_model {
+        return parent::do_make_from_data($data);
+    }
 }
-
-$plugin->version = 2020121701;
-$plugin->requires = 2014051200;
-$plugin->component = 'local_feedback';
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.0';
-$plugin->dependencies = [
-        'webservice_restful' => 2018102100,
-];
