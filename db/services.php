@@ -32,6 +32,20 @@ $functions = [
         'type' => 'read',
         'capabilities' => 'mod/assign:grade',
     ],
+    'local_feedback_get_submission' => [
+        'classname' => 'local_feedback\\webservice\\get_submission',
+        'methodname' => 'service',
+        'description' => 'Return details of one submission',
+        'type' => 'read',
+        'capabilities' => 'mod/assign:grade',
+    ],
+    'local_feedback_update_grade' => [
+        'classname' => 'local_feedback\\webservice\\update_grade',
+        'methodname' => 'service',
+        'description' => 'Update grade and feedback for one submission',
+        'type' => 'write',
+        'capabilities' => 'mod/assign:grade',
+    ],
 ];
 
 $services = [

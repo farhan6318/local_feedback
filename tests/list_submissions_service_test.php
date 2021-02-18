@@ -72,4 +72,86 @@ class list_submissions_service_test extends advanced_testcase {
         $latestsubmission = array_pop($result->submissions);
         $this->assertSame($latestsubmission->email, $student->email);
     }
+
+    public function test_get_submission() {
+        global $DB;
+        $this->resetAfterTest();
+        $dg = $this->getDataGenerator();
+        $course = $dg->create_course();
+        $assigngenerator = $dg->get_plugin_generator('mod_assign');
+        $instance = $assigngenerator->create_instance(['course' => $course->id]);
+        $cm = get_coursemodule_from_instance('assign', $instance->id);
+        $context = context_module::instance($cm->id);
+        $assign = new assign($context, $cm, $course);
+
+        $roles = $DB->get_records('role', null, '', 'shortname, id');
+        $teacher = $this->getDataGenerator()->create_user();
+
+        $this->getDataGenerator()->enrol_user($teacher->id,
+                $course->id,
+                $roles['teacher']->id);
+
+        $this->setUser($teacher);
+
+        // Enrol two students.
+        $students = [];
+        for ($i = 0; $i < 2; $i++) {
+            $student = $this->getDataGenerator()->create_user();
+            $this->getDataGenerator()->enrol_user($student->id,
+                    $course->id,
+                    $roles['student']->id);
+            $students[$student->id] = $student;
+        }
+        $participants = $assign->list_participants(null, false);
+        $this->add_submission($students[reset($participants)->id], $assign);
+        $result1 = list_submissions_service::instance()->set_assignid($instance->id)->get_data();
+        $submission = reset($result1->submissions);
+
+        $result = \local_feedback\service\get_submission_service::instance()->set_submissionid($submission->submissionid)->get_data();
+        $this->assertIsObject($result);
+        $this->assertSame($result->submissionid, $submission->submissionid);
+    }
+
+    public function test_update_grade_and_feedback() {
+        global $DB;
+        $this->resetAfterTest();
+        $dg = $this->getDataGenerator();
+        $course = $dg->create_course();
+        $assigngenerator = $dg->get_plugin_generator('mod_assign');
+        $instance = $assigngenerator->create_instance(['course' => $course->id]);
+        $cm = get_coursemodule_from_instance('assign', $instance->id);
+        $context = context_module::instance($cm->id);
+        $assign = new assign($context, $cm, $course);
+
+        $roles = $DB->get_records('role', null, '', 'shortname, id');
+        $teacher = $this->getDataGenerator()->create_user();
+
+        $this->getDataGenerator()->enrol_user($teacher->id,
+                $course->id,
+                $roles['teacher']->id);
+
+        $this->setUser($teacher);
+
+        // Enrol two students.
+        $students = [];
+        for ($i = 0; $i < 2; $i++) {
+            $student = $this->getDataGenerator()->create_user();
+            $this->getDataGenerator()->enrol_user($student->id,
+                    $course->id,
+                    $roles['student']->id);
+            $students[$student->id] = $student;
+        }
+        $participants = $assign->list_participants(null, false);
+        $this->add_submission($students[reset($participants)->id], $assign);
+        $result1 = list_submissions_service::instance()->set_assignid($instance->id)->get_data();
+        $submission = reset($result1->submissions);
+
+        $result = \local_feedback\service\update_grade::instance()->update_grade_and_feedback($submission->submissionid, 10.75, 'test feedback');
+        $this->assertTrue($result);
+        $result1 = list_submissions_service::instance()->set_assignid($instance->id)->get_data();
+        $submission = reset($result1->submissions);
+
+        $this->assertSame($submission->grade, 10.75);
+        $this->assertSame($submission->feedbackcomments, 'test feedback');
+    }
 }
