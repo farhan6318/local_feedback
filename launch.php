@@ -27,6 +27,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
 $courseid = required_param('course', PARAM_INT);
+$cmid = optional_param('cmid', null, PARAM_INT);
 require_login($courseid, false);
 
 $PAGE->set_course(get_course($courseid));
@@ -35,15 +36,15 @@ $config = get_config('local_feedback');
 $configured = !empty($config) && !empty($config->ltilaunchurl)
         && !empty($config->ltikey) && !empty($config->ltisecret);
 
-$launchcontainer = LTI_LAUNCH_CONTAINER_EMBED;
+$launchcontainer = LTI_LAUNCH_CONTAINER_DEFAULT;
 
 $instance = (object) [
     'id' => 0,
     'course' => $courseid,
     'name' => 'Feedback generator',
     'typeid' => null,
-    'instructorchoicesendname' => 0,
-    'instructorchoicesendemailaddr' => 0,
+    'instructorchoicesendname' => 1,
+    'instructorchoicesendemailaddr' => 1,
     'instructorchoiceallowroster' => null,
     'instructorcustomparameters' => null,
     'instructorchoiceacceptgrades' => 0,
@@ -55,5 +56,9 @@ $instance = (object) [
     'servicesalt' => uniqid('', true),
     'debuglaunch' => 0,
 ];
+
+if ($cmid !== null) {
+    $instance->resource_link_id = $cmid;
+}
 
 lti_launch_tool($instance);
