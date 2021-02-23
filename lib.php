@@ -15,19 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_feedback', language 'en'
+ * Main lib.
+ * Use this library ONLY for hooks.
+ * DO NOT put your own functions in here - use a class instead.
  *
  * @package   local_feedback
- * @copyright 2020, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
+ * @copyright Copyright (c) 2021 Citricity Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Feedback generator API';
-$string['wstokendetails'] = 'WS Token details';
-$string['key'] = 'LTI key';
-$string['keydesc'] = 'The LTI key';
-$string['secret'] = 'LTI secret';
-$string['secretdesc'] = 'The LTI secret';
-$string['launchurl'] = 'LTI launch URL';
-$string['launchurldesc'] = 'The URL for the LTI tool endpoint';
-$string['launchfeedbacklti'] = 'Generate Feedback';
+defined('MOODLE_INTERNAL') || die;
+
+function local_feedback_before_standard_html_head() {
+    global $PAGE, $COURSE;
+
+    // TODO - add a capability check here for teachers (will need new capability launchfeedbacklti.
+    if ($PAGE->pagetype === 'mod-assign-view') {
+        // Load up mod-assign JS.
+        $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
+            [$COURSE->id, $PAGE->cm->id]);
+
+    }
+}
