@@ -18,39 +18,47 @@ namespace local_feedback\models;
 
 defined('MOODLE_INTERNAL') || die;
 
-class list_submission_model extends base_model {
+class grade_model extends base_model {
 
     /**
-     * @var batch_output_model
-     * @wsdesc Batch information.
+     * @var string
+     * @wsdesc grade type
      * @wsrequired true
      */
-    public $batch;
+    public $gradetype;
 
     /**
-     * @var grade_model
-     * @wsdesc Grade model
+     * @var float
+     * @wsdesc grade min
      * @wsrequired true
      */
-    public $grademodel;
+    public $grademin;
 
     /**
-     * @var submission_model[]
-     * @wsdesc Submission model
+     * @var float
+     * @wsdesc grade max
      * @wsrequired true
      */
-    public $submissions;
+    public $grademax;
 
-    public function __construct($batch, $grademodel, $submissions) {
+    /**
+     * @var string[]
+     * @wsdesc scalemenu
+     * @wsrequired false
+     */
+    public $scalemenu;
+
+    public function __construct($gradetype, $grademin, $grademax, $scalemenu = []) {
         $this->set_props_construct_args(func_get_args());
     }
+
     /**
      * This is here for IDE completion.
      * @param array|object $data
      * @return array
      * @throws \coding_exception
      */
-    public static function from_data($data): list_submission_model {
+    public static function from_data($data): grade_model {
         return parent::do_make_from_data($data);
     }
 }

@@ -30,6 +30,7 @@ use local_feedback\models\list_submission_model;
 use local_feedback\service\list_submissions_service;
 use external_api;
 use external_value;
+use local_feedback\models\batch_model;
 use external_single_structure;
 use local_feedback\definition_helper;
 
@@ -48,6 +49,9 @@ class list_submissions extends external_api {
     public static function service_parameters() {
         return new \external_function_parameters([
             'request' => new external_single_structure([
+                'batch' => new external_single_structure(
+                        definition_helper::define_for_webservice(batch_model::class), 'Batch controls', VALUE_OPTIONAL
+                ),
                 'assignid' => new external_value(PARAM_INT, 'Assign id', VALUE_REQUIRED)
             ])
         ]);
@@ -69,7 +73,10 @@ class list_submissions extends external_api {
      */
     public static function service(array $request) {
         $args = (object) self::validate_parameters(self::service_parameters(), ['request' => $request]);
-        $result =  ['response' => list_submissions_service::instance()->set_assignid($args->request['assignid'])->get_data()];
+        $page = $args->request['batch']['page'] ?? 1;
+        $perpage = $args->request['batch']['perpage'] ?? null;
+        $model = $perpage ? new batch_model($page, $perpage) : new batch_model($page);
+        $result =  ['response' => list_submissions_service::instance()->set_batch($model)->set_assignid($args->request['assignid'])->get_data()];
         return $result;
     }
 }

@@ -52,7 +52,7 @@ class update_grade extends external_api {
                 'request' => new external_single_structure([
                         'submissionid' => new external_value(PARAM_INT, 'Submission id', VALUE_REQUIRED),
                         'grade' => new external_value(PARAM_FLOAT, 'Grade', VALUE_REQUIRED),
-                        'feedback' => new external_value(PARAM_TEXT, 'Feedback', VALUE_REQUIRED)
+                        'feedback' => new external_value(PARAM_RAW, 'Feedback', VALUE_REQUIRED)
                 ])
         ]);
     }

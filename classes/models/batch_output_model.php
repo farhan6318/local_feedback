@@ -18,30 +18,29 @@ namespace local_feedback\models;
 
 defined('MOODLE_INTERNAL') || die;
 
-class list_submission_model extends base_model {
+/**
+ * This is used for responses that require batching.
+ * Class batch_output_model
+ * @package local_feedback\models
+ */
+class batch_output_model extends batch_model {
 
     /**
-     * @var batch_output_model
-     * @wsdesc Batch information.
+     * @var string
+     * @wsdesc Total pages that can be returned.
      * @wsrequired true
      */
-    public $batch;
+    public $totalpages;
 
     /**
-     * @var grade_model
-     * @wsdesc Grade model
-     * @wsrequired true
+     * @var int
+     * @wsdesc Total items that can be returned.
+     * @wsrequired false
      */
-    public $grademodel;
+    public $totalitems;
 
-    /**
-     * @var submission_model[]
-     * @wsdesc Submission model
-     * @wsrequired true
-     */
-    public $submissions;
 
-    public function __construct($batch, $grademodel, $submissions) {
+    public function __construct(int $page, int $perpage, int $totalpages, int $totalitems) {
         $this->set_props_construct_args(func_get_args());
     }
     /**
@@ -50,7 +49,7 @@ class list_submission_model extends base_model {
      * @return array
      * @throws \coding_exception
      */
-    public static function from_data($data): list_submission_model {
+    public static function from_data($data): batch_model {
         return parent::do_make_from_data($data);
     }
 }

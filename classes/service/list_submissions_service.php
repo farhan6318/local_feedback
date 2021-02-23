@@ -23,9 +23,12 @@
 
 namespace local_feedback\service;
 
+use local_feedback\models\grade_model;
 use local_feedback\models\list_submission_model;
 use local_feedback\models\submission_model;
+use local_feedback\models\batch_model;
 use mod_assign\plugininfo\assignsubmission;
+use local_feedback\models\batch_output_model;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -40,6 +43,11 @@ require_once($CFG->dirroot . '/mod/assign/gradingtable.php');
 class list_submissions_service extends base_service {
 
     /**
+     * @var batch_model - this is the batch we are going to process.
+     */
+    private $batch;
+
+    /**
      * @var $assignid - this is the assign id we are going to process.
      */
     private $assignid;
@@ -49,15 +57,52 @@ class list_submissions_service extends base_service {
         return $this;
     }
 
+    public function set_batch(batch_model $batch): list_submissions_service {
+        $this->batch = $batch;
+        return $this;
+    }
+
+
     public function get_data() {
+        global $DB;
         if (!$this->assignid) {
             throw new \coding_exception('You must call set_assignid before you can use this method');
         }
+        if (!$this->batch) {
+            throw new \coding_exception('You must call set_batch before you can use this method');
+        }
+
         $cm = get_coursemodule_from_instance('assign', $this->assignid);
         $context = \context_module::instance($cm->id);
         $course = get_course($cm->course);
         $assign = new \assign($context, $cm, $course);
         $participants = $assign->list_participants(null, false);
+
+        $page = $this->batch->page;
+        $perpage = $this->batch->perpage;
+
+        $count = count($participants);
+        $pages = ceil($count / $perpage);
+
+        if ($page > $pages) {
+            $msg = "Requested page ($page) is greater than the available number of pages ($pages)";
+            throw new \moodle_exception($msg);
+        }
+
+        $batchoutput = new batch_output_model($page, $perpage, $pages, $count);
+
+        $gradeitem = $assign->get_grade_item();
+        $grademax = $gradeitem->grademax;
+        $grademin = $gradeitem->grademin;
+        if ($gradeitem->gradetype == GRADE_TYPE_VALUE) {
+            $gradetype = 'Value';
+            $gradedetails = grade_model::from_data(['gradetype' => $gradetype, 'grademin' => $grademin, 'grademax' => $grademax]);
+        } else if ($gradeitem->gradetype == GRADE_TYPE_SCALE) {
+            $gradetype = 'Scale';
+            $scale = $DB->get_record('scale', ['id' => $gradeitem->scaleid]);
+            $scalemenu = make_menu_from_list($scale->scale);
+            $gradedetails = grade_model::from_data(['gradetype' => $gradetype, 'grademin' => $grademin, 'grademax' => $grademax, 'scalemenu' => $scalemenu]);
+        }
 
         $table = new \assign_grading_table($assign, count($participants), '', 0, false);
         $table->setup();
@@ -105,7 +150,7 @@ class list_submissions_service extends base_service {
                 'files' => $files
             ]);
         }
-        $result = list_submission_model::from_data(['submissions' => $response]);
+        $result = list_submission_model::from_data(['submissions' => $response, 'grademodel' => $gradedetails, 'batch' => $batchoutput]);
         return $result;
     }
 

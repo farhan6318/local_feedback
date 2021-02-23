@@ -16,41 +16,43 @@
 
 namespace local_feedback\models;
 
+use local_feedback\exceptions\webservice_exception;
+
 defined('MOODLE_INTERNAL') || die;
 
-class list_submission_model extends base_model {
+class batch_model extends base_model {
 
     /**
-     * @var batch_output_model
-     * @wsdesc Batch information.
-     * @wsrequired true
+     * @var int
+     * @wsdesc Page number.
+     * @wsrequired false
      */
-    public $batch;
+    public $page;
 
     /**
-     * @var grade_model
-     * @wsdesc Grade model
-     * @wsrequired true
+     * @var int
+     * @wsdesc Number of items per page.
+     * @wsrequired false
      */
-    public $grademodel;
+    public $perpage;
 
-    /**
-     * @var submission_model[]
-     * @wsdesc Submission model
-     * @wsrequired true
-     */
-    public $submissions;
-
-    public function __construct($batch, $grademodel, $submissions) {
+    public function __construct(int $page = 1, int $perpage = 100) {
         $this->set_props_construct_args(func_get_args());
+        if ($this->page < 1) {
+            throw new webservice_exception('page cannot be less than 1');
+        }
+        if ($this->perpage < 1) {
+            throw new webservice_exception('perpage cannot be less than 1');
+        }
     }
+
     /**
      * This is here for IDE completion.
      * @param array|object $data
      * @return array
      * @throws \coding_exception
      */
-    public static function from_data($data): list_submission_model {
+    public static function from_data($data): batch_model {
         return parent::do_make_from_data($data);
     }
 }
