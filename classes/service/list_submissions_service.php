@@ -124,16 +124,18 @@ class list_submissions_service extends base_service {
                 $file = new \assign_files($context, $value->submissionid, 'submission_files', 'assignsubmission_file');
                 $files = [];
                 if (isset($file->dir['files']) && !empty($file->dir['files'])) {
-                    $file = reset($file->dir['files']);
-                    $url = \moodle_url::make_pluginfile_url(
-                            $file->get_contextid(),
-                            'assignsubmission_file',
-                            'submission_files',
-                            $file->get_itemid(),
-                            $file->get_filepath(),
-                            $file->get_filename()
-                    )->out();
-                    $files[] = $url;
+                    foreach ($file->dir['files'] as $filename => $file) {
+                        $url = \moodle_url::make_pluginfile_url(
+                                $file->get_contextid(),
+                                'assignsubmission_file',
+                                'submission_files',
+                                $file->get_itemid(),
+                                $file->get_filepath(),
+                                $file->get_filename()
+                        )->out();
+                        $files[] = $url;
+                    }
+
                 }
             }
             $response[] = submission_model::from_data([
