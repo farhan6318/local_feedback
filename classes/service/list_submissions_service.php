@@ -48,12 +48,12 @@ class list_submissions_service extends base_service {
     private $batch;
 
     /**
-     * @var $assignid - this is the assign id we are going to process.
+     * @var $cmid - this is the cmid we are going to process.
      */
-    private $assignid;
+    private $cmid;
 
-    public function set_assignid(int $assignid): list_submissions_service {
-        $this->assignid = $assignid;
+    public function set_cmid(int $cmid): list_submissions_service {
+        $this->cmid = $cmid;
         return $this;
     }
 
@@ -65,14 +65,14 @@ class list_submissions_service extends base_service {
 
     public function get_data() {
         global $DB;
-        if (!$this->assignid) {
-            throw new \coding_exception('You must call set_assignid before you can use this method');
+        if (!$this->cmid) {
+            throw new \coding_exception('You must call set_cmid before you can use this method');
         }
         if (!$this->batch) {
             throw new \coding_exception('You must call set_batch before you can use this method');
         }
 
-        $cm = get_coursemodule_from_instance('assign', $this->assignid);
+        $cm = get_coursemodule_from_id('assign', $this->cmid);
         $context = \context_module::instance($cm->id);
         $course = get_course($cm->course);
         $assign = new \assign($context, $cm, $course);

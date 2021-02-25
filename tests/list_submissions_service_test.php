@@ -69,7 +69,7 @@ class list_submissions_service_test extends advanced_testcase {
         $perpage = null;
         $model = $perpage ? new batch_model($page, $perpage) : new batch_model($page);
 
-        $result = list_submissions_service::instance()->set_batch($model)->set_assignid($instance->id)->get_data();
+        $result = list_submissions_service::instance()->set_batch($model)->set_cmid($cm->id)->get_data();
 
         $this->assertNotEmpty($result);
         $this->assertObjectHasAttribute('submissions', $result);
@@ -113,7 +113,7 @@ class list_submissions_service_test extends advanced_testcase {
         $perpage = null;
         $model = $perpage ? new batch_model($page, $perpage) : new batch_model($page);
 
-        $result1 = list_submissions_service::instance()->set_batch($model)->set_assignid($instance->id)->get_data();
+        $result1 = list_submissions_service::instance()->set_batch($model)->set_cmid($cm->id)->get_data();
         $submission = reset($result1->submissions);
 
         $result = \local_feedback\service\get_submission_service::instance()->set_submissionid($submission->submissionid)->get_data();
@@ -156,12 +156,12 @@ class list_submissions_service_test extends advanced_testcase {
         $perpage = null;
         $model = $perpage ? new batch_model($page, $perpage) : new batch_model($page);
 
-        $result1 = list_submissions_service::instance()->set_batch($model)->set_assignid($instance->id)->get_data();
+        $result1 = list_submissions_service::instance()->set_batch($model)->set_cmid($cm->id)->get_data();
         $submission = reset($result1->submissions);
 
         $result = \local_feedback\service\update_grade::instance()->update_grade_and_feedback($submission->submissionid, 10.75, 'test feedback');
         $this->assertTrue($result);
-        $result1 = list_submissions_service::instance()->set_batch($model)->set_assignid($instance->id)->get_data();
+        $result1 = list_submissions_service::instance()->set_batch($model)->set_cmid($cm->id)->get_data();
         $submission = reset($result1->submissions);
 
         $this->assertSame($submission->grade, 10.75);

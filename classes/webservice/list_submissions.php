@@ -52,7 +52,7 @@ class list_submissions extends external_api {
                 'batch' => new external_single_structure(
                         definition_helper::define_for_webservice(batch_model::class), 'Batch controls', VALUE_OPTIONAL
                 ),
-                'assignid' => new external_value(PARAM_INT, 'Assign id', VALUE_REQUIRED)
+                'cmid' => new external_value(PARAM_INT, 'Course Module id', VALUE_REQUIRED)
             ])
         ]);
     }
@@ -76,7 +76,7 @@ class list_submissions extends external_api {
         $page = $args->request['batch']['page'] ?? 1;
         $perpage = $args->request['batch']['perpage'] ?? null;
         $model = $perpage ? new batch_model($page, $perpage) : new batch_model($page);
-        $result =  ['response' => list_submissions_service::instance()->set_batch($model)->set_assignid($args->request['assignid'])->get_data()];
+        $result =  ['response' => list_submissions_service::instance()->set_batch($model)->set_cmid($args->request['cmid'])->get_data()];
         return $result;
     }
 }
