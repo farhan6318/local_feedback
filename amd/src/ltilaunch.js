@@ -27,16 +27,30 @@ import {get_string as getString} from "core/str";
 
 export default class main {
     static init(course, cmid) {
-        if (cmid) {
+        if (cmid && $("body").attr("id") === "page-mod-assign-view") {
+            // Add button to mod assign page.
+
             getString("launchfeedbacklti", "local_feedback").then((buttonStr) => {
                 // Append to grading summary
-                const newButton = `<button class="btn btn btn-secondary ml-1" id="laucnfeedbacklti">${buttonStr}</button>`;
+                const newButton = `<button class="btn btn btn-secondary ml-1" id="launchfeedbacklti">${buttonStr}</button>`;
                 $(".gradingsummary .submissionlinks").append(newButton);
             });
 
-            $(".gradingsummary .submissionlinks").on("click", "#laucnfeedbacklti", (e) => {
+            $(".gradingsummary .submissionlinks").on("click", "#launchfeedbacklti", (e) => {
                 e.preventDefault();
                 window.location.href = `${Config.wwwroot}/local/feedback/launch.php?course=${course}&cmid=${cmid}`;
+            });
+        } else if ($("body").attr("id") === "page-user-profile") {
+            // Add launch button to user profile page.
+
+            getString("openfeedbacktool", "local_feedback").then((buttonStr) => {
+                // Append to grading summary
+                const newButton = `<button class="btn btn btn-secondary ml-1" id="launchfeedbacklti">${buttonStr}</button>`;
+                $("#page-navbar + div").append(newButton);
+                $("#launchfeedbacklti").click((e) => {
+                    e.preventDefault();
+                    window.location.href = `${Config.wwwroot}/local/feedback/launch.php?course=${course}`;
+                });
             });
         }
     }
