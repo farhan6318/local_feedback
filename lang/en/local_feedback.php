@@ -30,4 +30,5 @@ $string['secret'] = 'LTI secret';
 $string['secretdesc'] = 'The LTI secret';
 $string['launchurl'] = 'LTI launch URL';
 $string['launchurldesc'] = 'The URL for the LTI tool endpoint';
-$string['launchfeedbacklti'] = 'Generate Feedback';
+$string['launchfeedbacklti'] = 'Generate feedback';
+$string['openfeedbacktool'] = 'Open feedback tool';

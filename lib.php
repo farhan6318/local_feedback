@@ -31,9 +31,13 @@ function local_feedback_before_standard_html_head() {
 
     // TODO - add a capability check here for teachers (will need new capability launchfeedbacklti.
     if ($PAGE->pagetype === 'mod-assign-view') {
-        // Load up mod-assign JS.
+        // Add launch JS for current course.
         $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
             [$COURSE->id, $PAGE->cm->id]);
 
+    } else if ($PAGE->pagetype === 'user-profile') {
+        // Add launch JS for site.
+        $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
+            [SITEID]);
     }
 }
