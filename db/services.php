@@ -18,29 +18,43 @@
  * Web service definitions.
  *
  * @package   local_feedback
- * @copyright Copyright (c) 2020 Titus Learning
+ * @copyright 2021, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-        'local_feedback_version_info' => [
-                'classname' => 'local_feedback\\webservice\\version_info',
-                'methodname' => 'service',
-                'description' => 'Return key version info for Feedback webservices',
-                'type' => 'read',
-                'capabilities' => 'moodle/site:configview',
-        ],
+    'local_feedback_list_submissions' => [
+        'classname' => 'local_feedback\\webservice\\list_submissions',
+        'methodname' => 'service',
+        'description' => 'Return list of submissions of the assignment',
+        'type' => 'read',
+        'capabilities' => 'mod/assign:grade',
+    ],
+    'local_feedback_get_submission' => [
+        'classname' => 'local_feedback\\webservice\\get_submission',
+        'methodname' => 'service',
+        'description' => 'Return details of one submission',
+        'type' => 'read',
+        'capabilities' => 'mod/assign:grade',
+    ],
+    'local_feedback_update_grade' => [
+        'classname' => 'local_feedback\\webservice\\update_grade',
+        'methodname' => 'service',
+        'description' => 'Update grade and feedback for one submission',
+        'type' => 'write',
+        'capabilities' => 'mod/assign:grade',
+    ],
 ];
 
 $services = [
-        'Feedback Generation API Services' => [
-                'functions' => array_keys($functions),
-                'enabled' => 0,
-                'restrictedusers' => 0,
-                'shortname' => 'local_feedback',
-                'downloadfiles' => 1,
-                'uploadfiles' => 1,
-        ],
+    'Feedback Generation API Services' => [
+        'functions' => array_keys($functions),
+        'enabled' => 0,
+        'restrictedusers' => 0,
+        'shortname' => 'local_feedback',
+        'downloadfiles' => 1,
+        'uploadfiles' => 1,
+    ],
 ];
