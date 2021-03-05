@@ -26,18 +26,22 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Add LTI launch.
+ * @throws coding_exception
+ */
 function local_feedback_before_standard_html_head() {
     global $PAGE, $COURSE;
 
-    // TODO - add a capability check here for teachers (will need new capability launchfeedbacklti.
-    if ($PAGE->pagetype === 'mod-assign-view') {
-        // Add launch JS for current course.
-        $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
-            [$COURSE->id, $PAGE->cm->id]);
-
-    } else if ($PAGE->pagetype === 'user-profile') {
-        // Add launch JS for site.
-        $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
-            [SITEID]);
+    if (has_capability('local/feedback:launchfeedback', context_course::instance($COURSE->id))) {
+        if ($PAGE->pagetype === 'mod-assign-view') {
+            // Add launch JS for current course.
+            $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
+                [$COURSE->id, $PAGE->cm->id]);
+        } else if ($PAGE->pagetype === 'user-profile') {
+            // Add launch JS for site.
+            $PAGE->requires->js_call_amd('local_feedback/ltilaunch', 'init',
+                [SITEID]);
+        }
     }
 }

@@ -15,21 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'local_feedback', language 'en'
+ * Capability definitions for this module.
  *
- * @package   local_feedback
- * @copyright 2020, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
+ * @package local_feedback
+ * @author Guy Thomas
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Feedback generator API';
-$string['wstokendetails'] = 'WS Token details';
-$string['key'] = 'LTI key';
-$string['keydesc'] = 'The LTI key';
-$string['secret'] = 'LTI secret';
-$string['secretdesc'] = 'The LTI secret';
-$string['launchurl'] = 'LTI launch URL';
-$string['launchurldesc'] = 'The URL for the LTI tool endpoint';
-$string['launchfeedbacklti'] = 'Generate feedback';
-$string['openfeedbacktool'] = 'Open feedback tool';
-$string['feedback:launchfeedback'] = 'Launch feedback tool';
+$capabilities = [
+    'local/feedback:launchfeedback' => [
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes'   => [
+            'guest'          => CAP_PROHIBIT,
+            'student'        => CAP_PREVENT,
+            'teacher'        => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager'        => CAP_ALLOW
+        ]
+    ]
+];
