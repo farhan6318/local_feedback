@@ -33,3 +33,4 @@ $string['launchurldesc'] = 'The URL for the LTI tool endpoint';
 $string['launchfeedbacklti'] = 'Generate feedback';
 $string['openfeedbacktool'] = 'Open feedback tool';
 $string['feedback:launchfeedback'] = 'Launch feedback tool';
+$string['privacy:metadata'] = 'The local_feedback plugin does not store any personal data.';
