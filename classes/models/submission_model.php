@@ -97,6 +97,13 @@ class submission_model extends base_model {
      */
     public $files;
 
+    /**
+     * @var string
+     * @wsdesc Text for the submission
+     * @wsrequired false
+     */
+    public $submissiontext;
+
     public function __construct(
         int $studentid,
         string $firstname,
@@ -108,7 +115,8 @@ class submission_model extends base_model {
         ?int $timesubmitted = null,
         ?int $timemarked = null,
         ?string $feedbackcomments = null,
-        ?array $files = null) {
+        ?array $files = null,
+        ?string $submissiontext = null) {
         $this->set_props_construct_args(func_get_args());
     }
     /**

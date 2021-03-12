@@ -23,6 +23,7 @@
 
 namespace local_feedback\service;
 
+use core\session\manager as session_manager;
 use local_feedback\models\list_submission_model;
 use local_feedback\models\submission_model;
 use mod_assign\plugininfo\assignsubmission;
@@ -64,8 +65,8 @@ class update_grade extends base_service {
      */
     private $userid;
 
-    public function update_grade_and_feedback(int $submissionid, float $grade = 0, string $feedback = '') {
-        global $DB;
+    public function update_grade_and_feedback(int $submissionid, float $grade = 0, string $feedback = '', int $graderuserid = null) {
+        global $DB, $USER;
         $this->submissionid = $submissionid;
         $this->grade = $grade;
         $this->feedback = $feedback;
@@ -82,7 +83,10 @@ class update_grade extends base_service {
         $context = \context_module::instance($cm->id);
         $course = get_course($cm->course);
         $assign = new \assign($context, $cm, $course);
-
+        if ($graderuserid && has_capability('mod/assign:grade', $context, $graderuserid)) {
+            $graderuser = $DB->get_record('user', ['id' => $graderuserid]);
+            session_manager::set_user($graderuser);
+        }
         $feedbackplugin = $assign->get_feedback_plugin_by_type('comments');
 
         $data = (object) [
@@ -97,6 +101,7 @@ class update_grade extends base_service {
         $assign->update_grade($usergrade);
 
         $feedbackplugin->save($usergrade, $data);
+        session_manager::set_user($USER);
         return true;
     }
 

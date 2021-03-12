@@ -83,6 +83,7 @@ class get_submission_service extends base_service {
         $feedbackplugin = $assign->get_feedback_plugin_by_type('comments');
         $filesubmission = $assign->get_submission_plugin_by_type('file');
         foreach ($rawdata as $key => $value) {
+            $text = $DB->get_field('assignsubmission_onlinetext', 'onlinetext', ['submission' => $value->submissionid]) ?? '';
             if ($feedbackplugin) {
                 $grade = $assign->get_user_grade($key, false);
                 if (isset($grade) && $grade) {
@@ -118,7 +119,8 @@ class get_submission_service extends base_service {
                     'timesubmitted' => $value->timesubmitted,
                     'timemarked' => $value->timemarked,
                     'feedbackcomments' => $feedback,
-                    'files' => $files
+                    'files' => $files,
+                    'text' => $text
             ]);
         }
         $result = reset($response);

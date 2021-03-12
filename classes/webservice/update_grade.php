@@ -52,7 +52,8 @@ class update_grade extends external_api {
                 'request' => new external_single_structure([
                         'submissionid' => new external_value(PARAM_INT, 'Submission id', VALUE_REQUIRED),
                         'grade' => new external_value(PARAM_FLOAT, 'Grade', VALUE_REQUIRED),
-                        'feedback' => new external_value(PARAM_RAW, 'Feedback', VALUE_REQUIRED)
+                        'feedback' => new external_value(PARAM_RAW, 'Feedback', VALUE_REQUIRED),
+                        'graderuserid' => new external_value(PARAM_INT, 'Grader userid', VALUE_OPTIONAL)
                 ])
         ]);
     }
@@ -71,7 +72,8 @@ class update_grade extends external_api {
      */
     public static function service(array $request) {
         $args = (object) self::validate_parameters(self::service_parameters(), ['request' => $request]);
-        $result =  ['response' => \local_feedback\service\update_grade::instance()->update_grade_and_feedback($args->request['submissionid'], $args->request['grade'], $args->request['feedback'])];
+        $result =  ['response' => \local_feedback\service\update_grade::instance()->update_grade_and_feedback(
+            $args->request['submissionid'], $args->request['grade'], $args->request['feedback'], $args->request['graderuserid'])];
         return $result;
     }
 }
