@@ -41,5 +41,5 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_feedback/ltilaunchurl', new lang_string('launchurl', 'local_feedback'),
         new lang_string('launchurldesc', 'local_feedback'), '', PARAM_URL, 60));
 
-    $ADMIN->add('tools', $settings);
+    $ADMIN->add('localplugins', $settings);
 }
