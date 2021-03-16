@@ -62,7 +62,7 @@ class auto_config extends base_service {
     /**
      * Name of webservice.
      */
-    const WEB_SERVICE_NAME = 'Feedback Generation API';
+    const WEB_SERVICE_NAME = 'Feedback Generation API Services';
 
     /**
      * Name of role web service user assigned to.

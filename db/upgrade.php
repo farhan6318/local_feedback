@@ -13,24 +13,34 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
+ * local feedback webservices
+ *
  * @package   local_feedback
  * @copyright 2021, Farhan Karmali <farhan6318@gmail.com>, Guy Thomas <brudinie@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-if (!$plugin) {
-    $plugin = new stdClass();
+
+/**
+ * Titus core web services upgrades
+ *
+ * @param int $oldversion the version we are upgrading from
+ * @return bool always true
+ */
+function xmldb_local_feedback_upgrade($oldversion) {
+    global $CFG, $DB;
+    $dbman = $DB->get_manager();
+    if ($oldversion < 2021031204) {
+        $do = $DB->get_record('external_services', ['name' => 'Feedback Generation API Services']);
+        if ($do) {
+            $do->name = \local_feedback\service\auto_config::WEB_SERVICE_NAME;
+            $DB->update_record('external_services', $do);
+        }
+        upgrade_plugin_savepoint(true, 2021031204, 'local', 'tlwebservices');
+    }
+
+    return true;
 }
-
-$plugin->version = 2021031204;
-$plugin->requires = 2014051200;
-$plugin->component = 'local_feedback';
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.0';
-$plugin->dependencies = [
-        'webservice_restful' => 2018102100,
-];
