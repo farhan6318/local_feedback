@@ -28,6 +28,13 @@ class list_submission_model extends base_model {
     public $assignmentname;
 
     /**
+     * @var string
+     * @wsdesc Shortname of the course .
+     * @wsrequired true
+     */
+    public $courseshortname;
+
+    /**
      * @var batch_output_model
      * @wsdesc Batch information.
      * @wsrequired true
@@ -48,7 +55,7 @@ class list_submission_model extends base_model {
      */
     public $submissions;
 
-    public function __construct($batch, $grademodel, $submissions, $assignmentname) {
+    public function __construct($batch, $grademodel, $submissions, $assignmentname, $courseshortname) {
         $this->set_props_construct_args(func_get_args());
     }
     /**

@@ -156,7 +156,8 @@ class list_submissions_service extends base_service {
                 'submissiontext' => $text
             ]);
         }
-        $result = list_submission_model::from_data(['submissions' => $response, 'grademodel' => $gradedetails, 'batch' => $batchoutput, 'assignmentname' => $cm->name]);
+        $result = list_submission_model::from_data(['submissions' => $response, 'grademodel' => $gradedetails, 'batch' => $batchoutput,
+            'assignmentname' => $cm->name, 'courseshortname' => $course->shortname]);
         return $result;
     }
 

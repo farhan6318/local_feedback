@@ -26,7 +26,7 @@ if (!$plugin) {
     $plugin = new stdClass();
 }
 
-$plugin->version = 2021032300;
+$plugin->version = 2021032301;
 $plugin->requires = 2014051200;
 $plugin->component = 'local_feedback';
 $plugin->maturity = MATURITY_BETA;
