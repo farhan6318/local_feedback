@@ -21,6 +21,13 @@ defined('MOODLE_INTERNAL') || die;
 class list_submission_model extends base_model {
 
     /**
+     * @var string
+     * @wsdesc Name of assignment.
+     * @wsrequired true
+     */
+    public $assignmentname;
+
+    /**
      * @var batch_output_model
      * @wsdesc Batch information.
      * @wsrequired true
@@ -41,7 +48,7 @@ class list_submission_model extends base_model {
      */
     public $submissions;
 
-    public function __construct($batch, $grademodel, $submissions) {
+    public function __construct($batch, $grademodel, $submissions, $assignmentname) {
         $this->set_props_construct_args(func_get_args());
     }
     /**
