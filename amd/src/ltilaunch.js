@@ -38,7 +38,7 @@ export default class main {
 
             $(".gradingsummary .submissionlinks").on("click", "#launchfeedbacklti", (e) => {
                 e.preventDefault();
-                window.location.href = `${Config.wwwroot}/local/feedback/launch.php?course=${course}&cmid=${cmid}`;
+                window.open(`${Config.wwwroot}/local/feedback/launch.php?course=${course}&cmid=${cmid}`);
             });
         } else if ($("body").attr("id") === "page-user-profile") {
             // Add launch button to user profile page.
@@ -49,7 +49,7 @@ export default class main {
                 $("#page-navbar + div").append(newButton);
                 $("#launchfeedbacklti").click((e) => {
                     e.preventDefault();
-                    window.location.href = `${Config.wwwroot}/local/feedback/launch.php?course=${course}`;
+                    window.open(`${Config.wwwroot}/local/feedback/launch.php?course=${course}`);
                 });
             });
         }
